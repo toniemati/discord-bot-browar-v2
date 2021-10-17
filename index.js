@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 import { Client, Intents, InteractionCollector, MessageEmbed } from 'discord.js';
-import cmds from './commands.js'
 import Bot from './src/Bot.js';
 
 const client = new Client({ 
@@ -22,6 +21,15 @@ client.on('ready', () => {
 //* Client interaction
 client.on('interactionCreate', async (interaction) => {
   bot.newInteraction(interaction);
+});
+
+
+//* Client message
+client.on('messageCreate', (message) => {
+  bot.newMessage(message);
+
+  //* Clear channel messages
+  bot.clearChannel(message);
 });
 
 dotenv.config();

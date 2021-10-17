@@ -25,6 +25,11 @@ class Bot {
     });
   }
 
+  //* New message related
+  newMessage(message) {
+    this.checkPawel(message);
+  }
+
   //* New interaction related
   newInteraction(interaction) {
     const { commandName, channelId } = interaction;
@@ -44,6 +49,25 @@ class Bot {
     }
   }
 
+  //* React to message if includes pawel id
+  checkPawel(message) {
+    // const pawelId = '251432496447750145'; //! toniemati id
+    const pawelId = '616710337709867073'; //! pawel id
+
+    //* Check pawel author
+    const check1 = message.author.id === pawelId;
+
+    //* Check pawel mention
+    const check2 = message.mentions.users.some(({ id }) => id === pawelId);
+
+    //* Check role mention with pawel
+    const check3 = message.mentions.roles.some((role) => role.members.some(({ id }) => id === pawelId));
+
+    if (check1 || check2 || check3)
+      message.react('🥟');
+
+  }
+
   //* Piwo command
   piwoCommand(interaction) {
     const beer = BEERS[Math.floor(Math.random() * BEERS.length)];
@@ -55,8 +79,19 @@ class Bot {
         .setImage(beer.imgUrl);
     
     interaction.reply({ embeds: [piwoEmbed] })
+    // this.deleteInteraction(interaction, 10);
+  }
 
-    this.deleteInteraction(interaction, 10);
+  clearChannel(message) {
+    if (message.author.bot) return;
+    
+    const toniematiId = '251432496447750145';
+
+    if (message.author.id !== toniematiId || message.content !== '^clear') return;
+    if (!this.checkChannels(message.channelId)) return;
+
+    // console.log('clearning channel');
+    message.channel.messages.fetch().then((res) => message.channel.bulkDelete(res));
   }
   
   //* If wrong channel don't reply
