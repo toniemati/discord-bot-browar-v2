@@ -1,7 +1,7 @@
 const commands = [
   {
     name: 'piwo',
-    description: 'Podaje losową nazwę piwka 🍻'
+    description: 'Returning only żywiec yet'
   }
 ];
 

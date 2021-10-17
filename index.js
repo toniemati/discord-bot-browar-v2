@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
-import { Client, Intents } from 'discord.js';
-
-dotenv.config();
+import { Client, Intents, InteractionCollector, MessageEmbed } from 'discord.js';
+import cmds from './commands.js'
+import Bot from './src/Bot.js';
 
 const client = new Client({ 
   intents: [
@@ -10,33 +10,19 @@ const client = new Client({
   ] 
 });
 
+const bot = new Bot(client);
+
 //* Client ready
 client.on('ready', () => {
-  console.log(`${client.user.username} is ready...`);
-
-  const guildId = '797429914503610370';
-  const guild = client.guilds.cache.get(guildId);
-
-  let commands;
-  commands = guild ? guild.commands : client.application?.commands;
-
-  commands.create({
-    name: 'piwo',
-    description: 'Replies to you with random beer name'
-  })
+  bot.ready();
+  bot.setupCommands();
 });
+
 
 //* Client interaction
 client.on('interactionCreate', async (interaction) => {
-  if (!interaction.isCommand()) return;
-
-  const { commandName, options } = interaction;
-
-  if (commandName === 'piwo') {
-    interaction.reply({
-      content: 'Żywiec',
-    })
-  }
+  bot.newInteraction(interaction);
 });
 
+dotenv.config();
 client.login(process.env.TOKEN);
