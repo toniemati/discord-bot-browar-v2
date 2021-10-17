@@ -1,6 +1,11 @@
 import dotenv from 'dotenv';
+import express from 'express';
+import path from 'path';
 import { Client, Intents, InteractionCollector, MessageEmbed } from 'discord.js';
 import Bot from './src/Bot.js';
+
+const app = express();
+app.use(express.static(path.join(process.cwd(), 'public')));
 
 const client = new Client({ 
   intents: [
@@ -33,4 +38,9 @@ client.on('messageCreate', (message) => {
 });
 
 dotenv.config();
-client.login(process.env.TOKEN);
+
+app.listen(process.env.PORT, () => {
+  console.log(`Server listening on ${process.env.PORT}`)
+
+  client.login(process.env.TOKEN);
+});
